@@ -2,21 +2,28 @@ package com.xincheng.tracker.layout
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.ArrayMap
 import android.util.AttributeSet
+import android.util.Log
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.xincheng.tracker.R
+import com.xincheng.tracker.exposure.ExposureManager
+import com.xincheng.tracker.exposure.ExposureModel
+import com.xincheng.tracker.exposure.ReuseLayoutHook
+import com.xincheng.tracker.exposure.TrackerInternalConstants
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.abs
 
 /**
  * 统计用的Layout
- * @author chenchong
- * 2017/11/9
- * 上午10:07
  */
-class TrackLayout : FrameLayout {
+class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
   private val rect = Rect()
   private var clickFunc: ((View, MotionEvent, Long) -> Unit)? = null
   private var itemClickFunc: ((AdapterView<*>, View, Int, Long, MotionEvent, Long) -> Unit)? = null
@@ -28,29 +35,57 @@ class TrackLayout : FrameLayout {
     return@lazy declaredField
   }
 
+  /**
+   * Custom threshold is used to determine whether it is a click event,
+   * When the user moves more than 20 pixels in screen, it is considered as the scrolling event instead of a click.
+   */
+  private val CLICK_LIMIT = 20f
 
-  constructor(context: Context) : super(context)
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
-      defStyleAttr)
+  /**
+   * the X Position
+   */
+  private var mOriX = 0f
+
+  /**
+   * the Y Position
+   */
+  private var mOriY = 0f
+
+  private var mGestureDetector: GestureDetector? = null
+
+  private var mReuseLayoutHook: ReuseLayoutHook? = null
+
+  /**
+   * common info attached with the view inside page
+   */
+  var commonInfo =
+    HashMap<String, Any>()
+
+  /**
+   * all the visible views inside page, key is viewName
+   */
+  private val lastVisibleViewMap: Map<String, ExposureModel> =
+    ArrayMap<String, ExposureModel>()
+
+  private var lastOnLayoutSystemTimeMillis: Long = 0
 
 
-  override fun onTouchEvent(ev: MotionEvent?): Boolean {
-    if (ev != null) {
-      val ac = ev.action and MotionEvent.ACTION_MASK
-      if (ac == MotionEvent.ACTION_DOWN) {
-        val hitViews = findHitView(rootView, ev.x.toInt(), ev.y.toInt())
-        hitViews.forEach {
-          if (it is AdapterView<*>) {
-            wrapItemClick(it, ev)
-          } else {
-            wrapClick(it, ev)
-          }
-        }
-      }
-    }
-    return super.onTouchEvent(ev)
+  constructor(context: Context) : super(context){
+    initView()
   }
+  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs){
+    initView()
+  }
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
+      defStyleAttr){
+    initView()
+  }
+
+  private fun initView(){
+    mGestureDetector = GestureDetector(context, this)
+    mReuseLayoutHook = ReuseLayoutHook(this, commonInfo)
+  }
+
 
   internal fun registerClickFunc(func: ((View, MotionEvent, Long) -> Unit)) {
     this@TrackLayout.clickFunc = func
@@ -196,4 +231,128 @@ class TrackLayout : FrameLayout {
       itemClickFunc?.invoke(adapterView, view, position, id, ev, time)
     }
   }
+
+
+  override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+    mGestureDetector!!.onTouchEvent(ev)
+
+
+    when(ev.action){
+      MotionEvent.ACTION_DOWN ->{
+        mOriX = ev.x
+        mOriY = ev.y
+        val hitViews = findHitView(rootView, ev.x.toInt(), ev.y.toInt())
+        hitViews.forEach {
+          if (it is AdapterView<*>) {
+            wrapItemClick(it, ev)
+          } else {
+            wrapClick(it, ev)
+          }
+        }
+      }
+      MotionEvent.ACTION_MOVE ->{
+        if((abs(ev.x - mOriX) > CLICK_LIMIT) || (abs(ev.y - mOriY) > CLICK_LIMIT)){
+          val time = System.currentTimeMillis()
+          ExposureManager.getInstance().triggerViewCalculate(
+            TrackerInternalConstants.TRIGGER_VIEW_CHANGED,
+            this,
+            commonInfo,
+            lastVisibleViewMap
+          )
+
+        }
+      }
+
+    }
+
+    return super.dispatchTouchEvent(ev)
+
+  }
+
+  override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+    // duplicate message in 1s
+    val time = System.currentTimeMillis()
+    if (time - lastOnLayoutSystemTimeMillis > 1000) {
+      lastOnLayoutSystemTimeMillis = time
+      ExposureManager.getInstance().traverseViewTree(this, mReuseLayoutHook)
+    }
+    Log.v("Tag","onLayout traverseViewTree end costTime=" + (System.currentTimeMillis() - time))
+    super.onLayout(changed, left, top, right, bottom)
+  }
+
+  override fun onShowPress(e: MotionEvent?) {
+  }
+
+  override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    return false
+  }
+
+  override fun onDown(e: MotionEvent?): Boolean {
+    return false
+  }
+
+  override fun onFling(
+    e1: MotionEvent?,
+    e2: MotionEvent?,
+    velocityX: Float,
+    velocityY: Float
+  ): Boolean {
+    val time = System.currentTimeMillis()
+    postDelayed({
+      ExposureManager.getInstance().triggerViewCalculate(
+        TrackerInternalConstants.TRIGGER_VIEW_CHANGED,
+        this@TrackLayout,
+        commonInfo,
+        lastVisibleViewMap
+      )
+    }, 1000)
+    return false
+  }
+
+  override fun onScroll(
+    e1: MotionEvent?,
+    e2: MotionEvent?,
+    distanceX: Float,
+    distanceY: Float
+  ): Boolean {
+    return false
+  }
+
+  override fun onLongPress(e: MotionEvent?) {
+  }
+
+  /**
+   * the state change of window trigger the exposure event.
+   * Scene 3: switch back and forth when press Home button.
+   * Scene 4: enter into the next page
+   * Scene 5: window replace
+   *
+   * @param hasFocus
+   */
+  override fun dispatchWindowFocusChanged(hasFocus: Boolean) {
+    val ts = System.currentTimeMillis()
+    ExposureManager.getInstance().triggerViewCalculate(
+      TrackerInternalConstants.TRIGGER_WINDOW_CHANGED,
+      this,
+      commonInfo,
+      lastVisibleViewMap
+    )
+    super.dispatchWindowFocusChanged(hasFocus)
+  }
+
+  override fun dispatchVisibilityChanged(changedView: View, visibility: Int) {
+    // Scene 6: switch page in the TabActivity
+    if (visibility == View.GONE) {
+      val ts = System.currentTimeMillis()
+      ExposureManager.getInstance().triggerViewCalculate(
+        TrackerInternalConstants.TRIGGER_WINDOW_CHANGED,
+        this,
+        commonInfo,
+        lastVisibleViewMap
+      )
+    } else {
+    }
+    super.dispatchVisibilityChanged(changedView, visibility)
+  }
+
 }
