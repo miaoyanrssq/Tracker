@@ -1,4 +1,4 @@
-package com.zgy.tracker
+package com.zgy.tracker.fragments
 
 import android.content.Context
 import androidx.fragment.app.Fragment

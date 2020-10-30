@@ -355,4 +355,9 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
     super.dispatchVisibilityChanged(changedView, visibility)
   }
 
+
+  fun getLastVisibleViewMap(): Map<String, ExposureModel>? {
+    return lastVisibleViewMap
+  }
+
 }

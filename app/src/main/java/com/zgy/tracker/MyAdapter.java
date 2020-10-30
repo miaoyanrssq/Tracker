@@ -51,12 +51,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         // create a new view
         TextView v = (TextView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.my_text_view, parent, false);
-        Log.i(TAG, "onCreateViewHolder: "+ Integer.toHexString(v.hashCode()));
+        Log.i(TAG, "onCreateViewHolder: "+Integer.toHexString(v.hashCode()));
         v.setOnClickListener(clickListener);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);

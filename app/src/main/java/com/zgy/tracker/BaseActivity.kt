@@ -7,6 +7,9 @@ import com.xincheng.tracker.lifecycle.ITrackerIgnore
 
 /**
  *  Activity的基类
+ * @author chenchong
+ * 2017/11/23
+ * 下午3:18
  */
 open class BaseActivity : AppCompatActivity(), ITrackerHelper, ITrackerIgnore {
   ///////////////////////////////////////////////////////////////////////////

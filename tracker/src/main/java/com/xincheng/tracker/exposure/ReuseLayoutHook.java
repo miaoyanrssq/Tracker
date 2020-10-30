@@ -83,14 +83,14 @@ public class ReuseLayoutHook {
         @Override
         public void onPageSelected(int position) {
             if (state != ViewPager.SCROLL_STATE_SETTLING) {
-//                ExposureManager.getInstance().triggerViewCalculate(TrackerInternalConstants.TRIGGER_VIEW_CHANGED, mRootLayout, mCommonInfo, mRootLayout.getLastVisibleViewMap());
+                ExposureManager.getInstance().triggerViewCalculate(TrackerInternalConstants.TRIGGER_VIEW_CHANGED, mRootLayout, mCommonInfo, mRootLayout.getLastVisibleViewMap());
             }
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
             if (this.state == ViewPager.SCROLL_STATE_SETTLING && state == ViewPager.SCROLL_STATE_IDLE) {
-//                ExposureManager.getInstance().triggerViewCalculate(TrackerInternalConstants.TRIGGER_VIEW_CHANGED, mRootLayout, mCommonInfo, mRootLayout.getLastVisibleViewMap());
+                ExposureManager.getInstance().triggerViewCalculate(TrackerInternalConstants.TRIGGER_VIEW_CHANGED, mRootLayout, mCommonInfo, mRootLayout.getLastVisibleViewMap());
             }
             this.state = state;
         }
