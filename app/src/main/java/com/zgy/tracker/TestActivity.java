@@ -5,6 +5,7 @@
 package com.zgy.tracker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -19,7 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.tmall.ultraviewpager.UltraViewPager;
+import com.xincheng.tracker.Tracker;
 import com.xincheng.tracker.exposure.TrackerConstants;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ViewTracker Demo
@@ -28,7 +36,7 @@ import com.xincheng.tracker.exposure.TrackerConstants;
  * commitClickEvent: 点击埋点
  * commitExposureEvent: 曝光埋点
  */
-public class TestActivity extends Activity {
+public class TestActivity extends BaseActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -111,10 +119,20 @@ public class TestActivity extends Activity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.click_me:
+                    Map<String, String> map = new HashMap();
+                    map.put("eventId", "C201120015");
+                    map.put("ext", "extext");
+                    Tracker.INSTANCE.trackView(v, map);
                     Toast.makeText(TestActivity.this, "check logcat", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     };
+
+    @Nullable
+    @Override
+    public String getTrackName(@NotNull Context context) {
+        return "C.0000006.0.1." + System.currentTimeMillis();
+    }
 
 }

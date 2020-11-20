@@ -13,7 +13,10 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.xincheng.tracker.BuildConfig
+import com.xincheng.tracker.data.*
+import com.xincheng.tracker.data.DEVICEID
 import com.xincheng.tracker.data.DISTINCT_ID
+import com.xincheng.tracker.data.PLATFORM
 import com.xincheng.tracker.data.TrackerMNC
 import com.xincheng.tracker.data.TrackerNetworkType
 import java.util.*
@@ -22,7 +25,7 @@ import kotlin.collections.HashMap
 
 internal val buildInObject: HashMap<String, Any> = HashMap()
 internal val buildInLib: HashMap<String, Any> = HashMap()
-internal val buildInProperties: HashMap<String, Any> = HashMap()
+internal val buildInProperties: HashMap<String, String> = HashMap()
 
 internal var buildInUUID = ""
 
@@ -34,27 +37,47 @@ internal var isLogin = false
  */
 internal fun initBuildInProperties(context: Context) {
     buildInUUID = context.getUUID()
+//    if (!isLogin) {
+//        buildInObject.put(DISTINCT_ID, buildInUUID)
+//    }
+
+//    buildInLib.put("lib", "Android")
+//    buildInLib.put("lib_version", BuildConfig.VERSION_NAME)
+//    buildInLib.put("app_version", context.getVersionName())
+//
+//    buildInProperties.put("lib", "Android")
+//    buildInProperties.put("lib_version", BuildConfig.VERSION_NAME)
+//    buildInProperties.put("app_version", context.getVersionName())
+//    buildInProperties.put("manufacturer", Build.BRAND)
+//    buildInProperties.put("model", Build.MODEL)
+//    buildInProperties.put("os", "Android")
+//    buildInProperties.put("os_version", Build.VERSION.RELEASE)
+//    buildInProperties.put("os_version", Build.VERSION.RELEASE)
+//    buildInProperties.put("screen_height", context.getScreenWidth())
+//    buildInProperties.put("screen_width", context.getScreenHeight())
+//    buildInProperties.put("carrier", context.getMNC().desc())
+//    buildInProperties.put("imeicode", context.getIMEI())
+//    buildInProperties.put("device_id", context.getAndroidId())
+
+    buildInProperties[ACCOUNTID] = "0"
+    buildInProperties[DEVICEID] = context.getAndroidId()
+    buildInProperties[PLATFORM] = "3"
+    buildInProperties[CLIENTINFO] = "|${Build.BRAND}|${Build.MODEL}"
+    buildInProperties[OS] = Build.VERSION.RELEASE
+    buildInProperties[VERSIONNAME] = context.getVersionName()
+    buildInProperties[CHANNELID] = ""
+    buildInProperties[CLIENTTIME] = System.currentTimeMillis().toString()
+    buildInProperties[NETWORK] = getNetWork(context).toString()
+    buildInProperties[LONGITUDE] = ""
+    buildInProperties[LATITUDE] = ""
     if (!isLogin) {
-        buildInObject.put(DISTINCT_ID, buildInUUID)
+        buildInProperties[SESSIONID] = buildInUUID
     }
 
-    buildInLib.put("lib", "Android")
-    buildInLib.put("lib_version", BuildConfig.VERSION_NAME)
-    buildInLib.put("app_version", context.getVersionName())
+//    buildInProperties[URL] = ""
+//    buildInProperties[REF] = ""
 
-    buildInProperties.put("lib", "Android")
-    buildInProperties.put("lib_version", BuildConfig.VERSION_NAME)
-    buildInProperties.put("app_version", context.getVersionName())
-    buildInProperties.put("manufacturer", Build.BRAND)
-    buildInProperties.put("model", Build.MODEL)
-    buildInProperties.put("os", "Android")
-    buildInProperties.put("os_version", Build.VERSION.RELEASE)
-    buildInProperties.put("os_version", Build.VERSION.RELEASE)
-    buildInProperties.put("screen_height", context.getScreenWidth())
-    buildInProperties.put("screen_width", context.getScreenHeight())
-    buildInProperties.put("carrier", context.getMNC().desc())
-    buildInProperties.put("imeicode", context.getIMEI())
-    buildInProperties.put("device_id", context.getAndroidId())
+
 }
 
 internal fun login(userId: String) {
@@ -195,6 +218,43 @@ internal fun Context.getNetworkType(): TrackerNetworkType {
     } else {
         return TrackerNetworkType.UNKNOWN
     }
+}
+
+/**
+ * 获取network 枚举值
+ */
+internal fun getNetWork(context: Context): Int{
+    val type = context.getNetworkType()
+    val mnc = context.getMNC()
+    when(type){
+        TrackerNetworkType.WIFI -> return 1
+        TrackerNetworkType.G4 -> {
+            when(mnc){
+                TrackerMNC.CMCC -> return 2
+                TrackerMNC.CUCC -> return 5
+                TrackerMNC.CTCC -> return 8
+                else -> return 0
+            }
+        }
+        TrackerNetworkType.G3 -> {
+            when(mnc){
+                TrackerMNC.CMCC -> return 3
+                TrackerMNC.CUCC -> return 4
+                TrackerMNC.CTCC -> return 9
+                else -> return 0
+            }
+        }
+        TrackerNetworkType.G2 -> {
+            when(mnc){
+                TrackerMNC.CMCC -> return 4
+                TrackerMNC.CUCC -> return 7
+                TrackerMNC.CTCC -> return 10
+                else -> return 0
+            }
+        }
+        else -> return 0
+    }
+
 }
 
 @SuppressLint("MissingPermission")

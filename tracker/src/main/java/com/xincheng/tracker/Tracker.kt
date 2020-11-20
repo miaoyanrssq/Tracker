@@ -256,7 +256,8 @@ object Tracker {
 
 
   internal fun trackScreen(properties: Map<String, Any?>?) {
-    val event = TrackerEvent(VIEW_SCREEN)
+//    val event = TrackerEvent(VIEW_SCREEN)
+    val event = TrackerEvent("0")
     event.addProperties(properties)
     com.xincheng.tracker.utils.trackEvent(event)
 
@@ -277,7 +278,8 @@ object Tracker {
       // 如果事件被忽略了，则直接返回
       return
     }
-    val event = TrackerEvent(CLICK)
+//    val event = TrackerEvent(CLICK)
+    val event = TrackerEvent("2")
     event.time = time
     event.addProperties(trackProperties)
     com.xincheng.tracker.utils.trackEvent(event)

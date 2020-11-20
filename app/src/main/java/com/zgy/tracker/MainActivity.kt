@@ -58,7 +58,7 @@ class MainActivity : BaseActivity() {
     title = getTrackName(this)
   }
 
-  override fun getTrackName(context: Context) = "主Activity"
+  override fun getTrackName(context: Context) = "C.0000006.0.0." + System.currentTimeMillis()
 
   override fun getTrackProperties(context: Context): Map<String, Any?>? = null
 

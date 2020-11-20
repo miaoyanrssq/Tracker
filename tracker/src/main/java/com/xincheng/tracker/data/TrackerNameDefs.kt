@@ -28,3 +28,28 @@ internal const val ELEMENT_Y = "element_y"
 // 其他
 // 忽略点击事件
 internal const val IGNORE_CLICK = "ignore_click"
+
+
+/**
+ * 最新xc埋点数据
+ */
+
+internal const val EVENTID = "eventId"
+internal const val ACCOUNTID = "accountId"
+internal const val DEVICEID = "deviceId"
+internal const val PLATFORM = "platform"
+internal const val CLIENTINFO = "clientInfo"
+internal const val OS = "os"
+internal const val VERSIONNAME = "versionName"
+internal const val CHANNELID = "channelId"
+internal const val CLIENTTIME = "clientTime"
+internal const val NETWORK = "network"
+internal const val SESSIONID = "sessionId"
+internal const val LONGITUDE = "longitude"
+internal const val LATITUDE = "latitude"
+internal const val URL = "url"
+internal const val REF = "ref"
+internal const val XTP = "xtp"
+internal const val XTPREF = "xtpRef"
+internal const val EID = "eid"
+internal const val EXT = "ext"

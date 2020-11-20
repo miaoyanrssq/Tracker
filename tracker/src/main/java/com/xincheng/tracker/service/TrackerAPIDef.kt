@@ -1,11 +1,9 @@
 package com.xincheng.tracker.service
 
+import com.xincheng.tracker.data.TrackerResult
 import io.reactivex.Observable
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 /**
  * 上报接口的定义
@@ -20,8 +18,14 @@ interface TrackerAPIDef {
    * @param data 要上报的JSON数据
    * @param mode 上报数据的模式
    */
-  @FormUrlEncoded
-  @POST("{url}")
-  fun report(@Path("url") path: String, @Field("project") projectName: String, @Field(
-      "data") data: String, @Field("mode") mode: Int): Observable<Response<String>>
+//  @FormUrlEncoded
+//  @POST("{url}")
+//  fun report(@Path("url") path: String, @Field("project") projectName: String, @Field(
+//      "data") data: String, @Field("mode") mode: Int): Observable<Response<String>>
+
+
+    @FormUrlEncoded
+    @POST("{url}")
+    fun report(@Path(value = "url", encoded = true) path: String, @FieldMap formMap: Map<String, String?>): Observable<Response<String>>
+
 }
