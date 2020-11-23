@@ -35,6 +35,13 @@ allprojects {
     repositories {
         google()
         jcenter()
+//        maven {
+//            credentials {
+//                username "zhengaoyang"
+//                password "myrssq181332"
+//            }
+//            url 'http://maven.xinc818.com/repository/maven-public/'
+//        }
     }
 }
 

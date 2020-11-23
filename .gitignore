@@ -18,3 +18,4 @@ build
 gradlew
 gradlew.bat
 .settings
+/tracker/publish.properties
