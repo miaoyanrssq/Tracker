@@ -183,6 +183,7 @@ object Tracker {
   fun login(userId: String) {
     if (isDisable()) return
     buildInLogin(userId)
+    addProperty(ACCOUNTID, userId)
   }
 
   /**
@@ -191,6 +192,7 @@ object Tracker {
   fun logout() {
     if (isDisable()) return
     trackContext.let { buildInLogout() }
+    addProperty(ACCOUNTID, "")
 
   }
 

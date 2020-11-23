@@ -27,6 +27,10 @@ internal enum class TrackerNetworkType() {
   G4 {
     override fun desc(): String = "4G"
   },
+  /** 5G  */
+  G5 {
+    override fun desc(): String = "5G"
+  },
   /** 暂未处理的类型  */
   NO_DEAL {
     override fun desc(): String = "未知"

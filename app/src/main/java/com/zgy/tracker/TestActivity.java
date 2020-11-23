@@ -51,6 +51,7 @@ public class TestActivity extends BaseActivity {
         setContentView(R.layout.activity_test);
         initView();
         initUltraViewPager();
+        Tracker.INSTANCE.logout();
     }
 
     protected void initView() {

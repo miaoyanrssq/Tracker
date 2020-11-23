@@ -59,20 +59,18 @@ internal fun initBuildInProperties(context: Context) {
 //    buildInProperties.put("imeicode", context.getIMEI())
 //    buildInProperties.put("device_id", context.getAndroidId())
 
-    buildInProperties[ACCOUNTID] = "0"
+//    buildInProperties[ACCOUNTID] = "0" //公共字段，外部设置
     buildInProperties[DEVICEID] = context.getAndroidId()
     buildInProperties[PLATFORM] = "3"
     buildInProperties[CLIENTINFO] = "|${Build.BRAND}|${Build.MODEL}"
     buildInProperties[OS] = Build.VERSION.RELEASE
     buildInProperties[VERSIONNAME] = context.getVersionName()
-    buildInProperties[CHANNELID] = ""
+//    buildInProperties[CHANNELID] = "" //公共字段，外部设置
     buildInProperties[CLIENTTIME] = System.currentTimeMillis().toString()
     buildInProperties[NETWORK] = getNetWork(context).toString()
-    buildInProperties[LONGITUDE] = ""
-    buildInProperties[LATITUDE] = ""
-    if (!isLogin) {
-        buildInProperties[SESSIONID] = buildInUUID
-    }
+//    buildInProperties[LONGITUDE] = "" //公共字段，外部设置
+//    buildInProperties[LATITUDE] = ""
+//    buildInProperties[SESSIONID] = buildInUUID//公共字段，外部设置
 
 //    buildInProperties[URL] = ""
 //    buildInProperties[REF] = ""
@@ -81,12 +79,12 @@ internal fun initBuildInProperties(context: Context) {
 }
 
 internal fun login(userId: String) {
-    buildInObject.put(DISTINCT_ID, userId)
+    buildInObject.put(ACCOUNTID, userId)
     isLogin = true
 }
 
 internal fun logout() {
-    buildInObject.put(DISTINCT_ID, buildInUUID)
+    buildInObject.put(ACCOUNTID, "0")
     isLogin = false
 }
 
@@ -205,6 +203,7 @@ internal fun Context.getNetworkType(): TrackerNetworkType {
         val telManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val networkType = telManager.networkType
         return when (networkType) {
+            TelephonyManager.NETWORK_TYPE_NR -> TrackerNetworkType.G5  //5G,目前大部分5G信号都是痛殴4G基站发射，所以大多数情况这个地方返回的还是4G的type
             TelephonyManager.NETWORK_TYPE_LTE  // 4G
                 , TelephonyManager.NETWORK_TYPE_HSPAP, TelephonyManager.NETWORK_TYPE_EHRPD -> TrackerNetworkType.G4
             TelephonyManager.NETWORK_TYPE_UMTS // 3G
@@ -223,33 +222,41 @@ internal fun Context.getNetworkType(): TrackerNetworkType {
 /**
  * 获取network 枚举值
  */
-internal fun getNetWork(context: Context): Int{
+internal fun getNetWork(context: Context): Int {
     val type = context.getNetworkType()
     val mnc = context.getMNC()
-    when(type){
+    when (type) {
         TrackerNetworkType.WIFI -> return 1
+        TrackerNetworkType.G5 -> {
+            return when (mnc) {
+                TrackerMNC.CMCC -> 11
+                TrackerMNC.CUCC -> 12
+                TrackerMNC.CTCC -> 13
+                else -> 0
+            }
+        }
         TrackerNetworkType.G4 -> {
-            when(mnc){
-                TrackerMNC.CMCC -> return 2
-                TrackerMNC.CUCC -> return 5
-                TrackerMNC.CTCC -> return 8
-                else -> return 0
+            return when (mnc) {
+                TrackerMNC.CMCC -> 2
+                TrackerMNC.CUCC -> 5
+                TrackerMNC.CTCC -> 8
+                else -> 0
             }
         }
         TrackerNetworkType.G3 -> {
-            when(mnc){
-                TrackerMNC.CMCC -> return 3
-                TrackerMNC.CUCC -> return 4
-                TrackerMNC.CTCC -> return 9
-                else -> return 0
+            return when (mnc) {
+                TrackerMNC.CMCC -> 3
+                TrackerMNC.CUCC -> 4
+                TrackerMNC.CTCC -> 9
+                else -> 0
             }
         }
         TrackerNetworkType.G2 -> {
-            when(mnc){
-                TrackerMNC.CMCC -> return 4
-                TrackerMNC.CUCC -> return 7
-                TrackerMNC.CTCC -> return 10
-                else -> return 0
+            return when (mnc) {
+                TrackerMNC.CMCC -> 4
+                TrackerMNC.CUCC -> 7
+                TrackerMNC.CTCC -> 10
+                else -> 0
             }
         }
         else -> return 0
@@ -290,7 +297,7 @@ private fun Context.getAndroidId(): String {
     ) ?: ""
 }
 
-private fun Context.getUUID(): String =
+public fun Context.getUUID(): String =
     (Build.BRAND + Build.MODEL).hashCode().toString() + getAndroidId()
 
 @SuppressLint("MissingPermission")
@@ -329,10 +336,10 @@ private fun Context.generateId(): String {
     try {
         val wvDrm = MediaDrm(videoVineUuid)
         val videoVineId = wvDrm.getPropertyByteArray(MediaDrm.PROPERTY_DEVICE_UNIQUE_ID)
-      deviceId = String((videoVineId)).encodeBASE64()
+        deviceId = String((videoVineId)).encodeBASE64()
 
-    }catch (e: UnsupportedSchemeException){
-      e.printStackTrace()
+    } catch (e: UnsupportedSchemeException) {
+        e.printStackTrace()
     }
-  return deviceId ?: ""
+    return deviceId ?: ""
 }
