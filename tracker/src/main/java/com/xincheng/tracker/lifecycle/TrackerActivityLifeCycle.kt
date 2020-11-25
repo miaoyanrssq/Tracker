@@ -11,6 +11,7 @@ import com.xincheng.tracker.layout.wrap
 import com.xincheng.tracker.utils.getTrackName
 import com.xincheng.tracker.utils.getTrackProperties
 import com.xincheng.tracker.utils.getTrackTitle
+import com.xincheng.tracker.utils.isSameScreenName
 import java.lang.ref.WeakReference
 
 /**
@@ -87,6 +88,10 @@ class TrackerActivityLifeCycle : Application.ActivityLifecycleCallbacks {
   }
 
   private fun track(activity: Activity) {
+    val screenName = activity.getTrackName()
+    if(isSameScreenName(screenName, Tracker.screenName)){
+      return
+    }
     Tracker.referer = Tracker.screenName
     Tracker.refererClass = Tracker.screenClass
     Tracker.screenName = activity.getTrackName()

@@ -19,7 +19,7 @@ class App: Application(), ITrackerContext{
         // 注意：该方法一定要在Tracker.initialize()方法前调用
         // 否则会由于上报地址未初始化，在触发启动事件时导致崩溃
 //    Tracker.setService(BuildConfig.SERVICE_HOST, BuildConfig.SERVICE_PATH)
-        Tracker.setService("https://dev-goblin.xinc818.com", "/goblin/track/action/v1")
+        Tracker.setService("https://dev-goblin.xinc818.com", "/goblin/track/action/v1", "/goblin/track/action/batch/v1")
         // 设定上报数据的项目名称
         Tracker.setProjectName("辛选精灵")
         // 设定上报数据的模式

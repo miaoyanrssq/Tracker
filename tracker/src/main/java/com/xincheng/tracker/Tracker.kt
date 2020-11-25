@@ -61,6 +61,7 @@ object Tracker {
 
   internal var serviceHost: String? = null
   internal var servicePath: String? = null
+  internal var serviceListPath: String? = null
   internal var projectName: String? = null
   internal var isBase64EncodeEnable = true
   internal var isUrlEncodeEnable = true
@@ -101,11 +102,12 @@ object Tracker {
    * @param host 上报数据的域名，例如：https://www.demo.com.cn
    * @param path 上报数据的接口名，例如：report.php
    */
-  fun setService(host: String, path: String) {
+  fun setService(host: String, path: String, listPath: String) {
     if (isDisable()) return
 
     serviceHost = host
     servicePath = path
+    serviceListPath = listPath
   }
 
   /**
@@ -256,10 +258,22 @@ object Tracker {
         f)
   }
 
-
+  /**
+   * 页面曝光
+   */
   internal fun trackScreen(properties: Map<String, Any?>?) {
 //    val event = TrackerEvent(VIEW_SCREEN)
     val event = TrackerEvent("0")
+    event.addProperties(properties)
+    com.xincheng.tracker.utils.trackEvent(event)
+
+  }
+
+  /**
+   * view曝光事件，手动调用
+   */
+  internal fun trackExposure(properties: Map<String, Any?>?) {
+    val event = TrackerEvent("1")
     event.addProperties(properties)
     com.xincheng.tracker.utils.trackEvent(event)
 
@@ -293,7 +307,7 @@ object Tracker {
   @Suppress("UNUSED_PARAMETER")
   internal fun trackAdapterView(adapterView: AdapterView<*>, view: View, position: Int, id: Long,
       ev: MotionEvent, time: Long) {
-    val event = TrackerEvent(CLICK)
+    val event = TrackerEvent("2")
     event.time = time
     val trackProperties = view.getTrackProperties(ev)
     event.addProperties(trackProperties)
@@ -312,14 +326,15 @@ object Tracker {
       event.addProperties(properties)
       com.xincheng.tracker.utils.trackEvent(event, background = true)
     }
-    clearOnBackground.let {
-      screenName = ""
-      screenClass = ""
-      parent = ""
-      parentClass = ""
-      referer = ""
-      refererClass = ""
-    }
+    //暂时不清空，否则息屏打开后，影响screenName的统计
+//    clearOnBackground.let {
+//      screenName = ""
+//      screenClass = ""
+//      parent = ""
+//      parentClass = ""
+//      referer = ""
+//      refererClass = ""
+//    }
   }
 
   internal fun onForeground() {

@@ -6,6 +6,7 @@ import com.xincheng.tracker.Tracker
 import com.xincheng.tracker.utils.getTrackName
 import com.xincheng.tracker.utils.getTrackProperties
 import com.xincheng.tracker.utils.getTrackTitle
+import com.xincheng.tracker.utils.isSameScreenName
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -64,6 +65,9 @@ class TrackerFragmentLifeCycle : FragmentManager.FragmentLifecycleCallbacks(),
     }
 
     val screenName = f.getTrackName()
+    if(isSameScreenName(screenName, Tracker.screenName)){
+      return
+    }
     Tracker.referer = Tracker.screenName
     Tracker.refererClass = Tracker.screenClass
     Tracker.screenName = screenName

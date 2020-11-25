@@ -142,3 +142,17 @@ internal fun log(event: TrackerEvent) {
 private fun log(s: String) {
   Log.d(TAG, s)
 }
+
+/**
+ * 基于特定格式的对比
+ */
+internal fun isSameScreenName(name1: String, name2: String): Boolean{
+  val timeStempLength = System.currentTimeMillis().toString().length
+  if(name1.length <= timeStempLength || name2.length < timeStempLength){
+    return false
+  }
+  if(name1.substring(0, name1.length - timeStempLength) == name2.substring(0, name2.length - timeStempLength)){
+    return true
+  }
+  return false
+}

@@ -34,7 +34,7 @@ internal const val IGNORE_CLICK = "ignore_click"
  * 最新xc埋点数据
  */
 
-internal const val EVENTID = "eventId"
+const val EVENTID = "eventId"
 internal const val ACCOUNTID = "accountId"
 internal const val DEVICEID = "deviceId"
 internal const val PLATFORM = "platform"

@@ -21,6 +21,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.xincheng.tracker.Tracker;
+import com.xincheng.tracker.data.TrackerNameDefsKt;
 import com.xincheng.tracker.exposure.TrackerConstants;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.xincheng.tracker.data.TrackerNameDefsKt.EVENTID;
 
 /**
  * ViewTracker Demo
@@ -52,6 +55,10 @@ public class TestActivity extends BaseActivity {
         initView();
         initUltraViewPager();
         Tracker.INSTANCE.logout();
+        Map<String, String> map = new HashMap();
+        map.put(TrackerNameDefsKt.EVENTID, "C2011200111");
+        map.put("ext", "extext");
+        Tracker.INSTANCE.trackEvent("1", map);
     }
 
     protected void initView() {
@@ -121,7 +128,7 @@ public class TestActivity extends BaseActivity {
             switch (v.getId()) {
                 case R.id.click_me:
                     Map<String, String> map = new HashMap();
-                    map.put("eventId", "C201120015");
+                    map.put(TrackerNameDefsKt.EVENTID, "C201120015");
                     map.put("ext", "extext");
                     Tracker.INSTANCE.trackView(v, map);
                     Toast.makeText(TestActivity.this, "check logcat", Toast.LENGTH_SHORT).show();

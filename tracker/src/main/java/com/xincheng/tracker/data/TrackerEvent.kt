@@ -12,11 +12,11 @@ import com.xincheng.tracker.utils.buildInProperties
  */
 data class TrackerEvent(
     @SerializedName("event")
-    @EventType private var event: String
+    @EventType var event: String
 ) {
 
     @SerializedName("properties")
-    private var properties = HashMap<String, Any>()
+    var properties = HashMap<String, Any>()
 
     @SerializedName("time")
     internal var time = System.currentTimeMillis()

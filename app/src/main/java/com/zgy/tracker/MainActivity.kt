@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.foolchen.lib.tracker.demo.data.Demo
 import com.xincheng.tracker.Tracker
+import com.xincheng.tracker.data.EVENTID
 import com.zgy.tracker.fragments.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,6 +20,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Tracker.trackEvent("MainActivity的自定义追踪事件", null)
+        Tracker.trackEvent("1", mapOf( EVENTID to "C2011200110"))
+
 
         Tracker.login("userId")
 
