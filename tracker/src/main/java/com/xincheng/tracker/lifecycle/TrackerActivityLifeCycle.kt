@@ -5,8 +5,6 @@ import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.xincheng.tracker.Tracker
-import com.xincheng.tracker.layout.attachTrackerFrameLayout
-import com.xincheng.tracker.layout.detachTrackerFrameLayout
 import com.xincheng.tracker.layout.wrap
 import com.xincheng.tracker.utils.getTrackName
 import com.xincheng.tracker.utils.getTrackProperties
@@ -28,7 +26,7 @@ class TrackerActivityLifeCycle : Application.ActivityLifecycleCallbacks {
 
   override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
     if (activity != null) {
-//      wrap(activity)
+      wrap(activity)
     }
     if (activity is FragmentActivity) {
       activity.supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifeCycle, true)
@@ -47,7 +45,7 @@ class TrackerActivityLifeCycle : Application.ActivityLifecycleCallbacks {
 
   override fun onActivityResumed(activity: Activity?) {
     if (activity != null) {
-      attachTrackerFrameLayout(activity)
+//      attachTrackerFrameLayout(activity)
       if (activity is ITrackerIgnore) {
         if (!activity.isIgnored()) {
           // 内部没有Fragment，直接进行统计
@@ -78,7 +76,7 @@ class TrackerActivityLifeCycle : Application.ActivityLifecycleCallbacks {
   }
 
   override fun onActivityDestroyed(activity: Activity?) {
-    detachTrackerFrameLayout(activity)
+//    detachTrackerFrameLayout(activity)
     if (activity is FragmentActivity) {
       activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentLifeCycle)
     }

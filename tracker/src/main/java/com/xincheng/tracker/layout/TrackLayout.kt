@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Rect
 import android.util.ArrayMap
 import android.util.AttributeSet
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -12,13 +11,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.xincheng.tracker.R
-import com.xincheng.tracker.exposure.ExposureManager
 import com.xincheng.tracker.exposure.ExposureModel
 import com.xincheng.tracker.exposure.ReuseLayoutHook
-import com.xincheng.tracker.exposure.TrackerInternalConstants
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.abs
 
 /**
  * 统计用的Layout
@@ -250,6 +246,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
           }
         }
       }
+      /********************关闭exposure************************
       MotionEvent.ACTION_MOVE ->{
         if((abs(ev.x - mOriX) > CLICK_LIMIT) || (abs(ev.y - mOriY) > CLICK_LIMIT)){
           val time = System.currentTimeMillis()
@@ -262,6 +259,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
 
         }
       }
+      */
 
     }
 
@@ -270,6 +268,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
   }
 
   override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+/********************关闭exposure************************
     // duplicate message in 1s
     val time = System.currentTimeMillis()
     if (time - lastOnLayoutSystemTimeMillis > 1000) {
@@ -277,6 +276,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
       ExposureManager.getInstance().traverseViewTree(this, mReuseLayoutHook)
     }
     Log.v("Tag","onLayout traverseViewTree end costTime=" + (System.currentTimeMillis() - time))
+*/
     super.onLayout(changed, left, top, right, bottom)
   }
 
@@ -297,6 +297,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
     velocityX: Float,
     velocityY: Float
   ): Boolean {
+/********************关闭exposure************************
     val time = System.currentTimeMillis()
     postDelayed({
       ExposureManager.getInstance().triggerViewCalculate(
@@ -306,6 +307,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
         lastVisibleViewMap
       )
     }, 1000)
+*/
     return false
   }
 
@@ -330,6 +332,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
    * @param hasFocus
    */
   override fun dispatchWindowFocusChanged(hasFocus: Boolean) {
+/********************关闭exposure************************
     val ts = System.currentTimeMillis()
     ExposureManager.getInstance().triggerViewCalculate(
       TrackerInternalConstants.TRIGGER_WINDOW_CHANGED,
@@ -337,11 +340,13 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
       commonInfo,
       lastVisibleViewMap
     )
+*/
     super.dispatchWindowFocusChanged(hasFocus)
   }
 
   override fun dispatchVisibilityChanged(changedView: View, visibility: Int) {
     // Scene 6: switch page in the TabActivity
+/********************关闭exposure************************
     if (visibility == View.GONE) {
       val ts = System.currentTimeMillis()
       ExposureManager.getInstance().triggerViewCalculate(
@@ -352,6 +357,7 @@ class TrackLayout : FrameLayout, GestureDetector.OnGestureListener {
       )
     } else {
     }
+*/
     super.dispatchVisibilityChanged(changedView, visibility)
   }
 
