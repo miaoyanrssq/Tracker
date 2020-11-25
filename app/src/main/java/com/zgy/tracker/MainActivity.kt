@@ -21,6 +21,8 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         Tracker.trackEvent("MainActivity的自定义追踪事件", null)
         Tracker.trackEvent("1", mapOf( EVENTID to "C2011200110"))
+        Tracker.trackEvent("1", mapOf( EVENTID to "C2011200111"))
+        Tracker.trackEvent("1", mapOf( EVENTID to "C2011200112"))
 
 
         Tracker.login("userId")

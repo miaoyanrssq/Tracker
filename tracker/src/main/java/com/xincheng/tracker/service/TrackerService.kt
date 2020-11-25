@@ -59,8 +59,6 @@ object TrackerService {
             if (!event.properties.containsKey(EVENTID)) return
             if ("1" === event.event) { //位置曝光时间，缓存数据库
                 serializeEvents(event)
-                println("serializeEvents === " + event.toPrettyJson())
-
             } else { // 其他数据，实时上报
                 checkReport(event)
             }
@@ -117,7 +115,7 @@ object TrackerService {
                                     } else {
                                         // 接口请求失败
                                         // 则此时将上报失败的事件添加回待上报的事件列表中
-                                        serializeEvents(data.toString())
+                                        serializeEvents(data)
                                     }
                                 }
 
@@ -125,7 +123,7 @@ object TrackerService {
                                     super.onError(e)
                                     // 接口请求失败
                                     // 则此时将上报失败的事件添加回待上报的事件列表中
-                                    serializeEvents(data.toString())
+                                    serializeEvents(data)
                                 }
                             }
                         )
@@ -313,14 +311,14 @@ object TrackerService {
     }
 
     /** 对事件列表进行持久化 */
-    private fun serializeEvents(events: List<TrackerEvent>) {
+    private fun serializeEvents(events: List<String>) {
         Tracker.trackContext.getApplicationContext().let {
             it.database.use {
                 transaction {
-                    events.forEach {
+                    events.forEach {bean->
                         insert(
-                            EventContract.TABLE_NAME, EventContract.DATA to GSON.toJson(it),
-                            EventContract.TIME to it.time
+                            EventContract.TABLE_NAME, EventContract.DATA to bean,
+                            EventContract.TIME to 0
                         )
                     }
                 }

@@ -23,7 +23,7 @@ class App: Application(), ITrackerContext{
         // 设定上报数据的项目名称
         Tracker.setProjectName("辛选精灵")
         // 设定上报数据的模式
-        Tracker.setMode(TrackerMode.DEBUG_TRACK)
+        Tracker.setMode(TrackerMode.RELEASE)
         // 初始化AndroidTracker
         Tracker.initialize(this)
 
