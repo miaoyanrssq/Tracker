@@ -5,11 +5,11 @@ import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
 
 /**
- * 数据库工具
- * @author chenchong
- * 2017/12/6
- * 下午6:39
- */
+* @author zhengy
+* 版本：1.0
+* 创建时间：2020/11/25 3:08 PM
+* description: 数据库工具
+*/
 class TrackerDbOpenHelper(context: Context) : ManagedSQLiteOpenHelper(context, "android_tracker",
     null, 1) {
 
