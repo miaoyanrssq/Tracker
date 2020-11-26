@@ -22,6 +22,8 @@ class App: Application(), ITrackerContext{
         Tracker.setService("https://dev-goblin.xinc818.com", "/goblin/track/action/v1", "/goblin/track/action/batch/v1")
         // 设定上报数据的项目名称
         Tracker.setProjectName("辛选精灵")
+        //设置批量上传时间间隔, 单位s
+        Tracker.setReportInterval(10L)
         // 设定上报数据的模式
         Tracker.setMode(TrackerMode.RELEASE)
         // 初始化AndroidTracker

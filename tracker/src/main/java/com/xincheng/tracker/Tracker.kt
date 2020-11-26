@@ -75,6 +75,11 @@ object Tracker {
   private var trackerActivityLifeCycle: TrackerActivityLifeCycle? = null
 
   /**
+   * 批量上报时间间隔， 单位s
+   */
+  internal var reportInterval = 30L
+
+  /**
    * 对AndroidTracker进行初始化
    *
    * 如果未调用该方法进行初始化，使用过程中可能会出现无法统计、Crash等情况
@@ -108,6 +113,13 @@ object Tracker {
     serviceHost = host
     servicePath = path
     serviceListPath = listPath
+  }
+
+  /**
+   * 设置批量上传时间间隔, 单位s
+   */
+  fun setReportInterval(interval: Long){
+    reportInterval = interval
   }
 
   /**

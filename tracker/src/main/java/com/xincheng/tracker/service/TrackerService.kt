@@ -95,7 +95,7 @@ object TrackerService {
      */
     @SuppressLint("CheckResult")
     fun intervalReport() {
-        Observable.interval(10, TimeUnit.SECONDS)
+        Observable.interval(Tracker.reportInterval, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .subscribe {
                 //忽略第一次
