@@ -91,7 +91,7 @@ object TrackerService {
     }
 
     /**
-     * 5分钟执行一次
+     * 定时执行
      */
     @SuppressLint("CheckResult")
     fun intervalReport() {
