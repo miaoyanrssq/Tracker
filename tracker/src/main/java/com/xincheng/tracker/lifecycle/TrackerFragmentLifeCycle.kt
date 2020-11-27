@@ -60,6 +60,9 @@ class TrackerFragmentLifeCycle : FragmentManager.FragmentLifecycleCallbacks(),
   }
 
   private fun track(f: Fragment) {
+    if(f !is ITrack){
+      return
+    }
     if (trackedRefs[f] == true) {
       return
     }

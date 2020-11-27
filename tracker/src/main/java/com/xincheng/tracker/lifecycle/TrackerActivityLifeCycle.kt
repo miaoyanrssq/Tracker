@@ -86,6 +86,9 @@ class TrackerActivityLifeCycle : Application.ActivityLifecycleCallbacks {
   }
 
   private fun track(activity: Activity) {
+    if(activity !is ITrack){
+      return
+    }
     val screenName = activity.getTrackName()
     if(isSameScreenName(screenName, Tracker.screenName)){
       return

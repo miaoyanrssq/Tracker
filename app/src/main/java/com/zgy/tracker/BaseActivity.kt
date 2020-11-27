@@ -2,6 +2,7 @@ package com.zgy.tracker
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import com.xincheng.tracker.lifecycle.ITrack
 import com.xincheng.tracker.lifecycle.ITrackerHelper
 import com.xincheng.tracker.lifecycle.ITrackerIgnore
 
@@ -11,7 +12,7 @@ import com.xincheng.tracker.lifecycle.ITrackerIgnore
  * 2017/11/23
  * 下午3:18
  */
-open class BaseActivity : AppCompatActivity(), ITrackerHelper, ITrackerIgnore {
+open class BaseActivity : AppCompatActivity(), ITrackerHelper, ITrackerIgnore, ITrack {
   ///////////////////////////////////////////////////////////////////////////
   // 该类实现ITrackerHelper接口，此处两个方法全部返回null
   // 则页面名称（别名）会直接取使用canonicalName来当做标题

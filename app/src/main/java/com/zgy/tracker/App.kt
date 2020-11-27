@@ -25,7 +25,7 @@ class App: Application(), ITrackerContext{
         //设置批量上传时间间隔, 单位s
         Tracker.setReportInterval(10L)
         // 设定上报数据的模式
-        Tracker.setMode(TrackerMode.RELEASE)
+        Tracker.setMode(TrackerMode.DEBUG_ONLY)
         // 初始化AndroidTracker
         Tracker.initialize(this)
 
