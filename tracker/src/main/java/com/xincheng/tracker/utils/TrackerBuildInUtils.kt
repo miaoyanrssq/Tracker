@@ -60,7 +60,7 @@ internal fun initBuildInProperties(context: Context) {
 //    buildInProperties.put("device_id", context.getAndroidId())
 
 //    buildInProperties[ACCOUNTID] = "0" //公共字段，外部设置
-    buildInProperties[DEVICEID] = context.getAndroidId()
+    buildInProperties[DEVICEID] = context.getAndroidId() //可以外部覆盖
     buildInProperties[PLATFORM] = "3"
     buildInProperties[CLIENTINFO] = "|${Build.BRAND}|${Build.MODEL}"
     buildInProperties[OS] = Build.VERSION.RELEASE
