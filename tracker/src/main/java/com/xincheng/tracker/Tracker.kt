@@ -206,7 +206,7 @@ object Tracker {
   fun logout() {
     if (isDisable()) return
     trackContext.let { buildInLogout() }
-    addProperty(ACCOUNTID, "")
+    addProperty(ACCOUNTID, "0")
 
   }
 
